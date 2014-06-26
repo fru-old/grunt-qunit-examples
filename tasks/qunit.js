@@ -16,8 +16,9 @@ module.exports = function(grunt) {
 
   // External lib.
   var phantomjs = require('grunt-lib-phantomjs-istanbul').init(grunt);
+  var parseExamples = require('jsdoc-at-examples'); 
   var istanbul = require('istanbul');
-  var instrumenter = new istanbul.Instrumenter();
+  var instrumenter = parseExamples(istanbul.Instrumenter);
   var collector = new istanbul.Collector();
   var rimraf = require('rimraf');
 
@@ -163,7 +164,6 @@ module.exports = function(grunt) {
     grunt.event.emit('qunit.error.onError', msg, stackTrace);
   });
 
-
   // Pass-through console.log statements.
   phantomjs.on('console', console.log.bind(console));
 
@@ -224,6 +224,15 @@ module.exports = function(grunt) {
 
       cb();
     }, function (err, result) {
+        
+        if(options.addJSDocExamples){
+          var harness = path.resolve(options.addJSDocExamples);
+          var key = harness.replace(/^\/?/g, "/").replace(/\\/g, "/")
+          var tests = '<script>' + instrumenter.examples.build('qunit') + '</script>';
+          harness = String(fs.readFileSync(harness)).replace(/($|(?:<\/body))/i, tests+'$1');
+          instrumentedFiles[key] = harness;
+        }
+
         // set transport options
         if (!options.transport) {
           options.transport = {};
