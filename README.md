@@ -191,7 +191,8 @@ qunit: {
       htmlReport: 'report/coverage',
       coberturaReport: 'report/',
       linesThresholdPct: 85
-    }
+    },
+    addJSDocExamples: 'test/runexamples.html'
   },
   all: ['test/**/*.html']
 }
