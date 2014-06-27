@@ -226,12 +226,13 @@ module.exports = function(grunt) {
     }, function (err, result) {
         
         if(options.addJSDocExamples){
-          instrumenter.examples.clear();
           var harness = path.resolve(options.addJSDocExamples);
           var key = harness.replace(/^\/?/g, "/").replace(/\\/g, "/")
           var tests = '<script>' + instrumenter.examples.build('qunit') + '</script>';
           harness = String(fs.readFileSync(harness)).replace(/($|(?:<\/body))/i, tests+'$1');
+          harness = instrumenter.examples.unescapedollar(harness);
           instrumentedFiles[key] = harness;
+          instrumenter.examples.clear();
         }
 
         // set transport options
