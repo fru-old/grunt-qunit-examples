@@ -226,6 +226,7 @@ module.exports = function(grunt) {
     }, function (err, result) {
         
         if(options.addJSDocExamples){
+          instrumenter.examples.clear();
           var harness = path.resolve(options.addJSDocExamples);
           var key = harness.replace(/^\/?/g, "/").replace(/\\/g, "/")
           var tests = '<script>' + instrumenter.examples.build('qunit') + '</script>';
